@@ -17,13 +17,25 @@ public class Player : MonoBehaviour
     [SerializeField] KeyCode RunButton = KeyCode.LeftShift;
     [SerializeField] KeyCode SlowButton = KeyCode.LeftControl;
 
-    KeyCode JumpButton = KeyCode.Space;
+    [SerializeField] KeyCode JumpButton = KeyCode.Space;
 
     int hor, ver;
-    float rotX, rotY, speed, jSpeed;
+    float rotX, rotY, speed, jSpeed, distance;
     CharacterController chCtrl;
     Vector3 direction;
 
+    GameObject obj_1;
+    GameObject obj_2;
+
+    bool CanTake = false;
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "Ruler")
+        {
+            CanTake = true;
+        }
+    }
 
     private void Start()
     {
@@ -85,5 +97,39 @@ public class Player : MonoBehaviour
         direction = Vector3.Normalize(transform.forward * ver + transform.right * hor);
 
         chCtrl.Move((direction * speed + transform.up * jSpeed) * Time.deltaTime);
+
+
+
+        // Builds a ray from camera point of view to the mouse position
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+        RaycastHit hit;
+
+        if (Input.GetKeyDown(KeyCode.Mouse0) && CanTake == true)
+        {
+            if (Physics.Raycast(ray, out hit))
+            {
+                obj_1 = hit.transform.gameObject;
+                //anim.SetBool("Clicked", true);
+                Debug.Log("1-ый объект выбран");
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.Mouse1) && CanTake == true)
+        {
+            if (Physics.Raycast(ray, out hit))
+            {
+                obj_2 = hit.transform.gameObject;
+                //anim.SetBool("Clicked", true);
+                Debug.Log("2-ой объект выбран");
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            distance = Vector3.Distance(obj_1.transform.position, obj_2.transform.position);
+            Debug.Log("Дистанция между объектами: " + distance.ToString("F2"));
+        }
     }
+
 }
