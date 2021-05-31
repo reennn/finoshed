@@ -4,8 +4,12 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - floor
-  - door
+  - task1
+  - task2
+  - task3
+  - task4
+  - task
+  - board
   layers:
   - Default
   - TransparentFX
